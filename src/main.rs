@@ -47,6 +47,12 @@ fn check_unicode_support() {
         println!("{}", "   Recommended: export LANG=en_US.UTF-8".green());
     }
     
+    // Check for WSL environment
+    if let Ok(wsl_distro) = std::env::var("WSL_DISTRO_NAME") {
+        println!("{}", format!("🐧 WSL Environment Detected: {}", wsl_distro).bright_blue());
+        println!("{}", "   Make sure Windows Terminal is configured with a CJK font!".yellow());
+    }
+    
     // Font recommendations
     println!("{}", "\n📝 For best Japanese character display, use a font that supports CJK:".cyan());
     println!("   • Noto Sans CJK / Noto Sans JP");
@@ -57,6 +63,7 @@ fn check_unicode_support() {
     
     println!("{}", "\n🖥️  Terminal recommendations:".cyan());
     println!("   • Modern terminals: Alacritty, Kitty, iTerm2, Windows Terminal");
+    println!("   • For WSL: Use Windows Terminal with CJK font configured");
     println!("   • Enable UTF-8 encoding in your terminal settings");
     
     thread::sleep(Duration::from_millis(2000));

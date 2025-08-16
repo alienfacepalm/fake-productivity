@@ -10,6 +10,16 @@ echo "=============================================="
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "📱 Detected Linux system"
     
+    # Check if running in WSL
+    if grep -qi microsoft /proc/version 2>/dev/null || [[ -n "$WSL_DISTRO_NAME" ]]; then
+        echo "🐧 WSL Environment detected: $WSL_DISTRO_NAME"
+        echo "📝 Additional WSL setup required:"
+        echo "   1. Install fonts in WSL (below)"
+        echo "   2. Configure Windows Terminal font settings"
+        echo "   3. Use Cascadia Code PL or install Noto fonts on Windows"
+        echo ""
+    fi
+    
     # Check for package manager
     if command -v apt &> /dev/null; then
         echo "📦 Installing fonts via apt..."
@@ -94,3 +104,11 @@ echo ""
 echo "🚀 Setup complete! Run the application to test:"
 echo "   ./run.sh"
 echo "   ./run.sh --matrix"
+echo ""
+if grep -qi microsoft /proc/version 2>/dev/null || [[ -n "$WSL_DISTRO_NAME" ]]; then
+    echo "🐧 WSL Users: Don't forget to configure Windows Terminal!"
+    echo "   1. Open Windows Terminal settings (Ctrl+,)"
+    echo "   2. Select your WSL profile"
+    echo "   3. Set font to 'Cascadia Code PL' or 'Noto Sans Mono CJK JP'"
+    echo "   4. Save and restart terminal"
+fi

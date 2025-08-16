@@ -17,6 +17,7 @@ A Rust application that generates convincing fake console logs to make your comp
 - **Realistic Timestamps**: Every log entry has proper timestamps
 - **Random Delays**: Varies timing to look natural
 - **Progress Bars**: Occasional progress indicators for long operations
+- **Environment Detection**: Automatically detects WSL and provides setup guidance
 
 ### Matrix Mode
 
@@ -25,6 +26,7 @@ A Rust application that generates convincing fake console logs to make your comp
 - **System Breach Alerts**: Matrix-themed security warnings
 - **Encrypted Data Streams**: Hexadecimal data flows
 - **Classic Matrix Quotes**: "Wake up, Neo..." and other iconic phrases
+- **Authentic Japanese Characters**: Uses real Hiragana and Katakana for Matrix effect
 
 ## Requirements
 
@@ -49,7 +51,7 @@ Install a font that supports CJK (Chinese, Japanese, Korean) characters:
 
 #### Installation Examples
 
-**Ubuntu/Debian:**
+**Ubuntu/Debian (including WSL):**
 ```bash
 # Install CJK fonts
 sudo apt update
@@ -64,6 +66,21 @@ export LC_ALL=en_US.UTF-8
 echo 'export LANG=en_US.UTF-8' >> ~/.bashrc
 echo 'export LC_ALL=en_US.UTF-8' >> ~/.bashrc
 source ~/.bashrc
+```
+
+**WSL (Windows Subsystem for Linux) Additional Steps:**
+```bash
+# After installing fonts in WSL, configure Windows Terminal:
+# 1. Open Windows Terminal settings (Ctrl+,)
+# 2. Go to your WSL profile settings
+# 3. Under Appearance > Font face, select:
+#    - "Cascadia Code PL" (pre-installed)
+#    - Or install "Noto Sans Mono CJK JP" on Windows
+# 4. Save settings and restart terminal
+
+# Test Unicode support in WSL:
+echo "Japanese test: 日本語テスト こんにちは"
+echo "Symbols: ▲ ◆ ● ■ ★ ◉ ⬢ ⬡"
 ```
 
 **Arch Linux:**
@@ -91,14 +108,39 @@ refreshenv
 # https://fonts.google.com/noto/specimen/Noto+Sans+JP
 ```
 
-**Windows Terminal Setup:**
+**Windows Terminal Setup (for Windows & WSL):**
 1. Open Windows Terminal settings (Ctrl+,)
-2. Go to Defaults > Appearance > Font face
-3. Select "Cascadia Code PL" or installed Noto font
-4. Save settings
+2. **For WSL**: Go to your specific WSL profile (Ubuntu, etc.)
+3. **For PowerShell**: Go to Windows PowerShell profile
+4. Under Appearance > Font face, select:
+   - "Cascadia Code PL" (pre-installed, good CJK support)
+   - "Noto Sans Mono CJK JP" (if manually installed)
+   - "Consolas" (limited CJK, but with fallback)
+5. Save settings and restart terminal
+
+**WSL Font Troubleshooting:**
+- Fonts installed in WSL don't affect Windows Terminal display
+- Windows Terminal uses Windows-installed fonts for rendering
+- Install CJK fonts on both Windows (for display) and WSL (for fallback)
+- If characters appear as boxes, the Windows Terminal font lacks CJK support
 
 #### Testing Your Setup
 The application will display a character test on startup. If you see garbled characters or boxes (□), your font doesn't support Japanese characters.
+
+#### Automated Setup
+For convenience, you can run the automated font setup script:
+
+```bash
+# Make the script executable and run it
+chmod +x setup-fonts.sh
+./setup-fonts.sh
+```
+
+This script will:
+- Detect your operating system (Linux, macOS, Windows/WSL)
+- Install appropriate CJK fonts using your package manager
+- Configure UTF-8 locale settings
+- Provide platform-specific guidance
 
 ## Usage
 
@@ -164,7 +206,25 @@ cargo run -- --matrix
 ### Normal Mode
 
 ```
-🚀 Fake Productivity System v2.1.3 - Starting...
+� Checking Unicode/Japanese character support...
+Test characters: 日本語テスト こんにちは 漢字 ひらがな カタカナ
+CJK symbols: ▲ ◆ ● ■ ★ ◉ ⬢ ⬡
+🐧 WSL Environment Detected: Ubuntu-22.04
+   Make sure Windows Terminal is configured with a CJK font!
+
+📝 For best Japanese character display, use a font that supports CJK:
+   • Noto Sans CJK / Noto Sans JP
+   • Source Han Sans / Source Code Pro
+   • Fira Code (with CJK fallback)
+   • JetBrains Mono (with CJK fallback)
+   • Cascadia Code PL
+
+🖥️  Terminal recommendations:
+   • Modern terminals: Alacritty, Kitty, iTerm2, Windows Terminal
+   • For WSL: Use Windows Terminal with CJK font configured
+   • Enable UTF-8 encoding in your terminal settings
+============================================
+�🚀 Fake Productivity System v2.1.3 - Starting...
 ============================================
 [2025-08-15 14:23:45.123] SYS CPU_CORE_MANAGER [ID:4567] - Optimizing memory allocation
 [2025-08-15 14:23:47.456] DB QUERY_ENGINE - 23,451 rows affected (234ms)
@@ -180,6 +240,10 @@ cargo run -- --matrix
 ### Matrix Mode
 
 ```
+🔍 Checking Unicode/Japanese character support...
+Test characters: 日本語テスト こんにちは 漢字 ひらがな カタカナ
+CJK symbols: ▲ ◆ ● ■ ★ ◉ ⬢ ⬡
+============================================
 THE MATRIX - NEURAL INTERFACE ACTIVE
 ======================================
 
@@ -189,7 +253,46 @@ ENCRYPTED_STREAM: 524288 bytes [A1B2C3D4]
 NEURAL_NODE_1337:: ████████████░░░░░░░░ [60%]
 WAKE UP, NEO...
 FF 00 FF 00 CA FE BA BE DE AD BE EF 13 37 H4 CK
+AGENT.SMITH.TRACE 0x1337H4CK >> BREACH
+MIND_BRIDGE_4069:: █████████████░░░░░░░ [68%]
 ```
+
+## Troubleshooting
+
+### Japanese Characters Not Displaying
+
+**Symptoms**: You see boxes (□) or question marks (?) instead of Japanese characters.
+
+**Solutions**:
+1. **Check terminal font**: Ensure your terminal uses a CJK-compatible font
+2. **WSL users**: Configure Windows Terminal font, not WSL fonts
+3. **Run setup script**: Use `./setup-fonts.sh` for automated setup
+4. **Manual font installation**: Follow the installation examples above
+5. **UTF-8 locale**: Ensure `LANG` environment variable includes UTF-8
+
+### WSL-Specific Issues
+
+**Problem**: Characters work in terminal but not in editors like joe/vim
+**Solution**: 
+- For joe: Use `joe -utf8 filename` or configure `~/.joerc` with `-utf8`
+- For vim: Usually works by default with UTF-8
+- Alternative: Use `nano` or `code` (VS Code) which handle UTF-8 better
+
+### Performance Issues
+
+**Problem**: Application runs slowly or uses too much CPU
+**Solutions**:
+- The application is designed to use some CPU for realistic effect
+- Use Ctrl+C to stop the application
+- Consider running in background: `cargo run &`
+
+### Build Issues
+
+**Problem**: Compilation errors
+**Solutions**:
+- Ensure you have Rust installed: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+- Update Rust: `rustup update`
+- Clean build: `cargo clean && cargo build`
 
 ## Tips for Maximum Effect
 
