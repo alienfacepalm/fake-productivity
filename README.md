@@ -28,6 +28,39 @@ A Rust application that generates convincing fake console logs to make your comp
 - **Classic Matrix Quotes**: "Wake up, Neo..." and other iconic phrases
 - **Authentic Japanese Characters**: Uses real Hiragana and Katakana for Matrix effect
 
+### Fullscreen Standalone Mode
+
+**NEW**: The application now runs in a proper fullscreen terminal interface:
+
+- **Immersive Experience**: Takes over your entire terminal with clean, professional display
+- **Signal Handling**: Graceful exit with Ctrl+C - properly restores terminal state
+- **Terminal Control**: Uses ANSI escape sequences for full screen management
+- **Clean Restoration**: Automatically restores cursor and screen buffer on exit
+- **Quick Mode**: Fast-paced updates for high-intensity fake productivity
+- **Daemon Mode**: Background process simulation (perfect for leaving running)
+
+### Command Line Options
+
+```bash
+# Standard fullscreen mode
+./fake-productivity
+
+# Matrix mode with fullscreen interface
+./fake-productivity --matrix
+
+# Quick mode - high frequency updates
+./fake-productivity --quick
+
+# Daemon mode - simulated background process
+./fake-productivity --daemon
+
+# Skip Unicode check and start immediately
+./fake-productivity --quick --matrix
+
+# Show all available options
+./fake-productivity --help
+```
+
 ## Requirements
 
 ### Unicode/Japanese Character Support
@@ -144,27 +177,56 @@ This script will:
 
 ## Usage
 
-### Normal Mode
+### Quick Start
+
+The application now runs in **fullscreen mode** by default, providing an immersive terminal experience:
 
 ```bash
+# Build and run in fullscreen mode
 cargo run
+
+# Or use the convenient run script
+./run.sh
+
+# For Windows users
+run.bat
 ```
 
-Or use the convenient run scripts:
-
-- Windows: `run.bat`
-- Linux/macOS: `./run.sh`
-
-### Matrix Mode
+### Advanced Usage
 
 ```bash
+# Matrix mode with fullscreen neural interface
 cargo run -- --matrix
+./run.sh --matrix
+
+# Quick mode - fast updates, skip Unicode check
+cargo run -- --quick
+./run.sh --quick
+
+# Daemon mode - simulated background process
+cargo run -- --daemon
+./run.sh --daemon
+
+# Combine flags for customized experience
+cargo run -- --matrix --quick  # Fast Matrix mode
+./run.sh --matrix --daemon      # Background Matrix mode
 ```
 
-Or use the run scripts with the matrix flag:
+### Professional Usage Tips
 
-- Windows: `run.bat --matrix`
-- Linux/macOS: `./run.sh --matrix`
+1. **Meetings**: Use `--matrix` mode for impressive tech displays
+2. **Quick Demos**: Use `--quick` for fast-paced activity
+3. **Background**: Use `--daemon` when you need to step away
+4. **Exit Cleanly**: Always use Ctrl+C to properly restore terminal
+
+### Legacy Simple Mode
+
+If you prefer the old simple console output without fullscreen:
+
+```bash
+# For development/debugging only
+cargo run -- --quick 2>/dev/null | head -20
+```
 
 Or use the dedicated Matrix scripts:
 

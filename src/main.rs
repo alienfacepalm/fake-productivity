@@ -11,19 +11,80 @@ struct Args {
     /// Enable Matrix-style display mode
     #[arg(long)]
     matrix: bool,
+    
+    /// Skip Unicode support check and start immediately
+    #[arg(long, short)]
+    quick: bool,
+    
+    /// Run in daemon mode (background process)
+    #[arg(long, short)]
+    daemon: bool,
 }
 
 fn main() {
     let args = Args::parse();
     
-    // Check for Japanese character support
-    check_unicode_support();
+    // Setup full-screen environment
+    setup_fullscreen();
+    
+    // Handle daemon mode
+    if args.daemon {
+        println!("🔧 Starting in daemon mode...");
+        // In a real implementation, you'd fork here
+        // For now, just run normally but indicate daemon mode
+    }
+    
+    // Check for Japanese character support (unless quick mode)
+    if !args.quick {
+        check_unicode_support();
+    }
+    
+    // Setup signal handlers for clean exit
+    setup_signal_handlers();
     
     if args.matrix {
         matrix_mode();
     } else {
-        normal_mode();
+        normal_mode(args.quick);
     }
+}
+
+fn setup_fullscreen() {
+    // Clear screen and position cursor at top
+    print!("\x1B[2J\x1B[H");
+    
+    // Hide cursor for cleaner look
+    print!("\x1B[?25l");
+    
+    // Enable alternate screen buffer (like vim/less)
+    print!("\x1B[?1049h");
+    
+    // Set terminal title
+    print!("\x1B]0;Fake Productivity System - Neural Interface\x07");
+    
+    std::io::Write::flush(&mut std::io::stdout()).unwrap();
+}
+
+fn setup_signal_handlers() {
+    // Register cleanup on Ctrl+C
+    ctrlc::set_handler(move || {
+        cleanup_and_exit();
+    }).expect("Error setting Ctrl-C handler");
+}
+
+fn cleanup_and_exit() {
+    // Restore cursor
+    print!("\x1B[?25h");
+    
+    // Restore normal screen buffer
+    print!("\x1B[?1049l");
+    
+    // Clear screen
+    print!("\x1B[2J\x1B[H");
+    
+    println!("🔌 Fake Productivity System disconnected. Reality restored.");
+    std::io::Write::flush(&mut std::io::stdout()).unwrap();
+    std::process::exit(0);
 }
 
 fn check_unicode_support() {
@@ -70,14 +131,26 @@ fn check_unicode_support() {
     println!("{}", "============================================".cyan());
 }
 
-fn normal_mode() {
-    println!("{}", "🚀 Fake Productivity System v2.1.3 - Starting...".bright_green().bold());
-    println!("{}", "============================================".cyan());
+fn normal_mode(quick: bool) {
+    // Clear screen and show header
+    print!("\x1B[2J\x1B[H");
+    
+    println!("{}", "🚀 FAKE PRODUCTIVITY SYSTEM v2.0".bright_cyan().bold());
+    println!("{}", "================================".cyan());
+    println!("{}", "Press Ctrl+C to exit gracefully".dimmed());
+    println!();
+    
+    let delay = if quick { 
+        println!("{}", "⚡ QUICK MODE ACTIVATED - High frequency updates!".bright_yellow());
+        println!();
+        200 // milliseconds
+    } else { 
+        2000 // milliseconds
+    };
     
     let mut rng = thread_rng();
     
     loop {
-        let delay = rng.gen_range(500..3000); // Random delay between 0.5-3 seconds
         thread::sleep(Duration::from_millis(delay));
         
         match rng.gen_range(0..10) {
@@ -92,11 +165,12 @@ fn normal_mode() {
 }
 
 fn matrix_mode() {
-    // Clear screen and hide cursor
-    print!("\x1B[2J\x1B[H\x1B[?25l");
+    // Clear screen and position cursor
+    print!("\x1B[2J\x1B[H");
     
     println!("{}", "THE MATRIX - NEURAL INTERFACE ACTIVE".bright_green().bold());
     println!("{}", "======================================".green());
+    println!("{}", "Press Ctrl+C to disconnect from the Matrix".dimmed());
     println!();
     
     let mut rng = thread_rng();
