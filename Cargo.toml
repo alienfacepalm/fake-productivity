@@ -4,6 +4,12 @@ version = "2.0.0"
 edition = "2021"
 description = "Fullscreen fake productivity terminal application with Matrix mode"
 license = "MIT"
+repository = "https://github.com/alienfacepalm/fake-productivity"
+homepage = "https://github.com/alienfacepalm/fake-productivity"
+documentation = "https://github.com/alienfacepalm/fake-productivity"
+keywords = ["productivity", "terminal", "matrix", "fake", "simulation"]
+categories = ["command-line-utilities"]
+authors = ["alienfacepalm"]
 
 [dependencies]
 rand = "0.8"

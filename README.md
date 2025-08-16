@@ -17,7 +17,6 @@ A Rust application that generates convincing fake console logs to make your comp
 - **Realistic Timestamps**: Every log entry has proper timestamps
 - **Random Delays**: Varies timing to look natural
 - **Progress Bars**: Occasional progress indicators for long operations
-- **Environment Detection**: Automatically detects WSL and provides setup guidance
 
 ### Matrix Mode
 
@@ -26,207 +25,30 @@ A Rust application that generates convincing fake console logs to make your comp
 - **System Breach Alerts**: Matrix-themed security warnings
 - **Encrypted Data Streams**: Hexadecimal data flows
 - **Classic Matrix Quotes**: "Wake up, Neo..." and other iconic phrases
-- **Authentic Japanese Characters**: Uses real Hiragana and Katakana for Matrix effect
-
-### Fullscreen Standalone Mode
-
-**NEW**: The application now runs in a proper fullscreen terminal interface:
-
-- **Immersive Experience**: Takes over your entire terminal with clean, professional display
-- **Signal Handling**: Graceful exit with Ctrl+C - properly restores terminal state
-- **Terminal Control**: Uses ANSI escape sequences for full screen management
-- **Clean Restoration**: Automatically restores cursor and screen buffer on exit
-- **Quick Mode**: Fast-paced updates for high-intensity fake productivity
-- **Daemon Mode**: Background process simulation (perfect for leaving running)
-
-### Command Line Options
-
-```bash
-# Standard fullscreen mode
-./fake-productivity
-
-# Matrix mode with fullscreen interface
-./fake-productivity --matrix
-
-# Quick mode - high frequency updates
-./fake-productivity --quick
-
-# Daemon mode - simulated background process
-./fake-productivity --daemon
-
-# Skip Unicode check and start immediately
-./fake-productivity --quick --matrix
-
-# Show all available options
-./fake-productivity --help
-```
-
-## Requirements
-
-### Unicode/Japanese Character Support
-
-This application uses Japanese characters (Hiragana, Katakana, Kanji) and Unicode symbols for authentic display. For the best experience:
-
-#### Terminal Setup
-- **Modern Terminal**: Use Alacritty, Kitty, iTerm2, Windows Terminal, or GNOME Terminal
-- **UTF-8 Encoding**: Ensure your terminal is set to UTF-8 encoding
-- **Environment**: Set `LANG=en_US.UTF-8` (or your locale with UTF-8)
-
-#### Font Requirements
-Install a font that supports CJK (Chinese, Japanese, Korean) characters:
-
-**Recommended Fonts:**
-- **Noto Sans CJK** / **Noto Sans JP** - Google's comprehensive CJK font
-- **Source Han Sans** / **Source Code Pro** - Adobe's CJK font family
-- **Fira Code** (with CJK fallback) - Popular programming font
-- **JetBrains Mono** (with CJK fallback) - JetBrains' monospace font
-- **Cascadia Code PL** - Microsoft's terminal font with good Unicode support
-
-#### Installation Examples
-
-**Ubuntu/Debian (including WSL):**
-```bash
-# Install CJK fonts
-sudo apt update
-sudo apt install fonts-noto-cjk fonts-noto-color-emoji fonts-liberation
-
-# Set UTF-8 locale (if not already set)
-sudo locale-gen en_US.UTF-8
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
-# Add to your shell profile for persistence
-echo 'export LANG=en_US.UTF-8' >> ~/.bashrc
-echo 'export LC_ALL=en_US.UTF-8' >> ~/.bashrc
-source ~/.bashrc
-```
-
-**WSL (Windows Subsystem for Linux) Additional Steps:**
-```bash
-# After installing fonts in WSL, configure Windows Terminal:
-# 1. Open Windows Terminal settings (Ctrl+,)
-# 2. Go to your WSL profile settings
-# 3. Under Appearance > Font face, select:
-#    - "Cascadia Code PL" (pre-installed)
-#    - Or install "Noto Sans Mono CJK JP" on Windows
-# 4. Save settings and restart terminal
-
-# Test Unicode support in WSL:
-echo "Japanese test: 日本語テスト こんにちは"
-echo "Symbols: ▲ ◆ ● ■ ★ ◉ ⬢ ⬡"
-```
-
-**Arch Linux:**
-```bash
-sudo pacman -S noto-fonts-cjk noto-fonts-emoji
-```
-
-**macOS:**
-```bash
-brew install --cask font-noto-sans-cjk-jp
-```
-
-**Windows PowerShell:**
-```powershell
-# Using Chocolatey (recommended)
-choco install noto-fonts-cjk
-refreshenv
-
-# Or using Scoop
-scoop bucket add nerd-fonts
-scoop install Cascadia-Code
-refreshenv
-
-# Or download manually from Google Fonts
-# https://fonts.google.com/noto/specimen/Noto+Sans+JP
-```
-
-**Windows Terminal Setup (for Windows & WSL):**
-1. Open Windows Terminal settings (Ctrl+,)
-2. **For WSL**: Go to your specific WSL profile (Ubuntu, etc.)
-3. **For PowerShell**: Go to Windows PowerShell profile
-4. Under Appearance > Font face, select:
-   - "Cascadia Code PL" (pre-installed, good CJK support)
-   - "Noto Sans Mono CJK JP" (if manually installed)
-   - "Consolas" (limited CJK, but with fallback)
-5. Save settings and restart terminal
-
-**WSL Font Troubleshooting:**
-- Fonts installed in WSL don't affect Windows Terminal display
-- Windows Terminal uses Windows-installed fonts for rendering
-- Install CJK fonts on both Windows (for display) and WSL (for fallback)
-- If characters appear as boxes, the Windows Terminal font lacks CJK support
-
-#### Testing Your Setup
-The application will display a character test on startup. If you see garbled characters or boxes (□), your font doesn't support Japanese characters.
-
-#### Automated Setup
-For convenience, you can run the automated font setup script:
-
-```bash
-# Make the script executable and run it
-chmod +x setup-fonts.sh
-./setup-fonts.sh
-```
-
-This script will:
-- Detect your operating system (Linux, macOS, Windows/WSL)
-- Install appropriate CJK fonts using your package manager
-- Configure UTF-8 locale settings
-- Provide platform-specific guidance
 
 ## Usage
 
-### Quick Start
-
-The application now runs in **fullscreen mode** by default, providing an immersive terminal experience:
+### Normal Mode
 
 ```bash
-# Build and run in fullscreen mode
 cargo run
-
-# Or use the convenient run script
-./run.sh
-
-# For Windows users
-run.bat
 ```
 
-### Advanced Usage
+Or use the convenient run scripts:
+
+- Windows: `run.bat`
+- Linux/macOS: `./run.sh`
+
+### Matrix Mode
 
 ```bash
-# Matrix mode with fullscreen neural interface
 cargo run -- --matrix
-./run.sh --matrix
-
-# Quick mode - fast updates, skip Unicode check
-cargo run -- --quick
-./run.sh --quick
-
-# Daemon mode - simulated background process
-cargo run -- --daemon
-./run.sh --daemon
-
-# Combine flags for customized experience
-cargo run -- --matrix --quick  # Fast Matrix mode
-./run.sh --matrix --daemon      # Background Matrix mode
 ```
 
-### Professional Usage Tips
+Or use the run scripts with the matrix flag:
 
-1. **Meetings**: Use `--matrix` mode for impressive tech displays
-2. **Quick Demos**: Use `--quick` for fast-paced activity
-3. **Background**: Use `--daemon` when you need to step away
-4. **Exit Cleanly**: Always use Ctrl+C to properly restore terminal
-
-### Legacy Simple Mode
-
-If you prefer the old simple console output without fullscreen:
-
-```bash
-# For development/debugging only
-cargo run -- --quick 2>/dev/null | head -20
-```
+- Windows: `run.bat --matrix`
+- Linux/macOS: `./run.sh --matrix`
 
 Or use the dedicated Matrix scripts:
 
@@ -268,25 +90,7 @@ cargo run -- --matrix
 ### Normal Mode
 
 ```
-� Checking Unicode/Japanese character support...
-Test characters: 日本語テスト こんにちは 漢字 ひらがな カタカナ
-CJK symbols: ▲ ◆ ● ■ ★ ◉ ⬢ ⬡
-🐧 WSL Environment Detected: Ubuntu-22.04
-   Make sure Windows Terminal is configured with a CJK font!
-
-📝 For best Japanese character display, use a font that supports CJK:
-   • Noto Sans CJK / Noto Sans JP
-   • Source Han Sans / Source Code Pro
-   • Fira Code (with CJK fallback)
-   • JetBrains Mono (with CJK fallback)
-   • Cascadia Code PL
-
-🖥️  Terminal recommendations:
-   • Modern terminals: Alacritty, Kitty, iTerm2, Windows Terminal
-   • For WSL: Use Windows Terminal with CJK font configured
-   • Enable UTF-8 encoding in your terminal settings
-============================================
-�🚀 Fake Productivity System v2.1.3 - Starting...
+🚀 Fake Productivity System v2.1.3 - Starting...
 ============================================
 [2025-08-15 14:23:45.123] SYS CPU_CORE_MANAGER [ID:4567] - Optimizing memory allocation
 [2025-08-15 14:23:47.456] DB QUERY_ENGINE - 23,451 rows affected (234ms)
@@ -302,10 +106,6 @@ CJK symbols: ▲ ◆ ● ■ ★ ◉ ⬢ ⬡
 ### Matrix Mode
 
 ```
-🔍 Checking Unicode/Japanese character support...
-Test characters: 日本語テスト こんにちは 漢字 ひらがな カタカナ
-CJK symbols: ▲ ◆ ● ■ ★ ◉ ⬢ ⬡
-============================================
 THE MATRIX - NEURAL INTERFACE ACTIVE
 ======================================
 
@@ -315,46 +115,7 @@ ENCRYPTED_STREAM: 524288 bytes [A1B2C3D4]
 NEURAL_NODE_1337:: ████████████░░░░░░░░ [60%]
 WAKE UP, NEO...
 FF 00 FF 00 CA FE BA BE DE AD BE EF 13 37 H4 CK
-AGENT.SMITH.TRACE 0x1337H4CK >> BREACH
-MIND_BRIDGE_4069:: █████████████░░░░░░░ [68%]
 ```
-
-## Troubleshooting
-
-### Japanese Characters Not Displaying
-
-**Symptoms**: You see boxes (□) or question marks (?) instead of Japanese characters.
-
-**Solutions**:
-1. **Check terminal font**: Ensure your terminal uses a CJK-compatible font
-2. **WSL users**: Configure Windows Terminal font, not WSL fonts
-3. **Run setup script**: Use `./setup-fonts.sh` for automated setup
-4. **Manual font installation**: Follow the installation examples above
-5. **UTF-8 locale**: Ensure `LANG` environment variable includes UTF-8
-
-### WSL-Specific Issues
-
-**Problem**: Characters work in terminal but not in editors like joe/vim
-**Solution**: 
-- For joe: Use `joe -utf8 filename` or configure `~/.joerc` with `-utf8`
-- For vim: Usually works by default with UTF-8
-- Alternative: Use `nano` or `code` (VS Code) which handle UTF-8 better
-
-### Performance Issues
-
-**Problem**: Application runs slowly or uses too much CPU
-**Solutions**:
-- The application is designed to use some CPU for realistic effect
-- Use Ctrl+C to stop the application
-- Consider running in background: `cargo run &`
-
-### Build Issues
-
-**Problem**: Compilation errors
-**Solutions**:
-- Ensure you have Rust installed: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
-- Update Rust: `rustup update`
-- Clean build: `cargo clean && cargo build`
 
 ## Tips for Maximum Effect
 
