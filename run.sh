@@ -4,6 +4,7 @@
 echo -e "\033]0;Fake Productivity Console\007"
 
 echo "Starting Fake Productivity System..."
+echo "Use --matrix flag for Matrix mode: cargo run -- --matrix"
 echo
 
 cargo run

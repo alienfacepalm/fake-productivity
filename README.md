@@ -83,3 +83,65 @@ You can modify the log types, messages, and timing in `src/main.rs`. The applica
 
 This is purely for entertainment purposes. Use responsibly and don't actually try to fool anyone into thinking you're saving the world with your computer! 😄
 # fake-productivity
+
+A Rust-based fake productivity system that generates realistic-looking system logs and activity to make it appear like you're working on important tasks.
+
+## Features
+
+- **Normal Mode**: Displays colorful, realistic system logs including:
+  - System operations (CPU, memory, disk optimization)
+  - Database queries and operations
+  - Network traffic and connections
+  - AI/ML model training and processing
+  - Security events and cryptographic operations
+  - General data processing with progress bars
+
+- **Matrix Mode**: Enables a Matrix movie-style terminal display with:
+  - Scrolling green text and Japanese characters
+  - Neural network interface simulation
+  - System breach alerts
+  - Encrypted data streams
+  - Classic Matrix quotes and references
+
+## Usage
+
+### Normal Mode (Default)
+```bash
+cargo run
+```
+
+Or use the convenient run scripts:
+- Windows: `run.bat`
+- Linux/macOS: `./run.sh`
+
+### Matrix Mode
+```bash
+cargo run -- --matrix
+```
+
+Or use the Matrix-specific scripts:
+- Windows: `matrix.bat`
+- Linux/macOS: `./matrix.sh`
+
+### Command Line Options
+```bash
+cargo run -- --help
+```
+
+## Installation
+
+1. Make sure you have Rust installed: https://rustup.rs/
+2. Clone this repository
+3. Run `cargo build` to compile
+4. Run `cargo run` to start in normal mode
+
+## Dependencies
+
+- `rand` - For random number generation
+- `colored` - For terminal color output
+- `chrono` - For timestamp generation
+- `clap` - For command line argument parsing
+
+## Cross-Platform
+
+Works on Windows, macOS, and Linux. Both `.bat` and `.sh` run scripts are provided for convenience.

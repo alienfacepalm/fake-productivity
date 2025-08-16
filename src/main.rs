@@ -3,8 +3,27 @@ use std::time::Duration;
 use rand::prelude::*;
 use colored::*;
 use chrono::prelude::*;
+use clap::Parser;
+
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// Enable Matrix-style display mode
+    #[arg(long)]
+    matrix: bool,
+}
 
 fn main() {
+    let args = Args::parse();
+    
+    if args.matrix {
+        matrix_mode();
+    } else {
+        normal_mode();
+    }
+}
+
+fn normal_mode() {
     println!("{}", "🚀 Fake Productivity System v2.1.3 - Starting...".bright_green().bold());
     println!("{}", "============================================".cyan());
     
@@ -21,6 +40,30 @@ fn main() {
             7 => generate_ai_log(&mut rng),
             8 => generate_security_log(&mut rng),
             _ => generate_processing_log(&mut rng),
+        }
+    }
+}
+
+fn matrix_mode() {
+    // Clear screen and hide cursor
+    print!("\x1B[2J\x1B[H\x1B[?25l");
+    
+    println!("{}", "THE MATRIX - NEURAL INTERFACE ACTIVE".bright_green().bold());
+    println!("{}", "======================================".green());
+    println!();
+    
+    let mut rng = thread_rng();
+    
+    loop {
+        let delay = rng.gen_range(50..300); // Faster updates for Matrix effect
+        thread::sleep(Duration::from_millis(delay));
+        
+        match rng.gen_range(0..15) {
+            0..=3 => generate_matrix_code(&mut rng),
+            4..=6 => generate_matrix_system(&mut rng),
+            7..=9 => generate_matrix_data(&mut rng),
+            10..=12 => generate_matrix_neural(&mut rng),
+            _ => generate_matrix_random(&mut rng),
         }
     }
 }
@@ -208,4 +251,135 @@ fn generate_hash(rng: &mut ThreadRng) -> String {
     (0..64)
         .map(|_| chars.chars().nth(rng.gen_range(0..chars.len())).unwrap())
         .collect()
+}
+
+// Matrix mode functions
+fn generate_matrix_code(rng: &mut ThreadRng) {
+    let code_chars = "0123456789ABCDEFアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+    let line_length = rng.gen_range(20..80);
+    let line: String = (0..line_length)
+        .map(|_| code_chars.chars().nth(rng.gen_range(0..code_chars.len())).unwrap())
+        .collect();
+    
+    let intensity = rng.gen_range(0..3);
+    match intensity {
+        0 => println!("{}", line.green().dimmed()),
+        1 => println!("{}", line.green()),
+        _ => println!("{}", line.bright_green().bold()),
+    }
+}
+
+fn generate_matrix_system(rng: &mut ThreadRng) {
+    let systems = [
+        "NEURAL.NET.CORE_01", "MATRIX.SYS.PROCESS", "ZION.MAINFRAME.ACCESS",
+        "NEO.USER.TERMINAL", "MORPHEUS.GUIDE.PROTO", "TRINITY.HACK.MODULE",
+        "AGENT.SMITH.TRACE", "ORACLE.PREDICT.SYS", "ARCHITECT.CORE.DESIGN"
+    ];
+    
+    let codes = [
+        "0x7F4A9E2D", "0xDEADBEEF", "0xCAFEBABE", "0x1337H4CK",
+        "0xFF00FF00", "0xC0FFEE42", "0xFACEFEED", "0xB00B1E5"
+    ];
+    
+    let system = systems.choose(rng).unwrap();
+    let code = codes.choose(rng).unwrap();
+    let status = if rng.gen_bool(0.8) { "ACTIVE" } else { "BREACH" };
+    
+    let status_color = if status == "ACTIVE" { 
+        status.green() 
+    } else { 
+        status.bright_red().blink() 
+    };
+    
+    println!("{} {} >> {}", 
+        system.bright_green(),
+        code.green().dimmed(),
+        status_color
+    );
+}
+
+fn generate_matrix_data(rng: &mut ThreadRng) {
+    let data_types = [
+        "ENCRYPTED_STREAM", "BINARY_PACKET", "NEURAL_PATTERN", 
+        "MEMORY_BLOCK", "CODE_INJECTION", "DATA_FRAGMENT"
+    ];
+    
+    let data_type = data_types.choose(rng).unwrap();
+    let size = rng.gen_range(1024..1048576);
+    let hash = generate_matrix_hash(rng, 8);
+    
+    println!("{}: {} bytes [{}]", 
+        data_type.green().bold(),
+        size.to_string().bright_green(),
+        hash.green().dimmed()
+    );
+}
+
+fn generate_matrix_neural(rng: &mut ThreadRng) {
+    let nodes = [
+        "NEURAL_NODE", "SYNAPSE_LINK", "CORTEX_PATH", "BRAIN_WAVE",
+        "MIND_BRIDGE", "THOUGHT_STREAM", "MEMORY_TRACE", "DREAM_STATE"
+    ];
+    
+    let node = nodes.choose(rng).unwrap();
+    let id = rng.gen_range(1000..9999);
+    let activity = rng.gen_range(0..100);
+    
+    let activity_bar = generate_matrix_bar(activity, 20);
+    
+    println!("{}_{}:: {} [{}%]", 
+        node.bright_green().bold(),
+        id.to_string().green(),
+        activity_bar,
+        activity.to_string().green()
+    );
+}
+
+fn generate_matrix_random(rng: &mut ThreadRng) {
+    let phrases = [
+        "WAKE UP, NEO...",
+        "FOLLOW THE WHITE RABBIT",
+        "THERE IS NO SPOON",
+        "FREE YOUR MIND",
+        "WELCOME TO THE REAL WORLD",
+        "IGNORANCE IS BLISS",
+        "CHOICE IS AN ILLUSION",
+        "WHAT IS REAL?",
+        "DOWN THE RABBIT HOLE",
+        "RED PILL OR BLUE PILL?"
+    ];
+    
+    if rng.gen_bool(0.1) { // 10% chance for special messages
+        let phrase = phrases.choose(rng).unwrap();
+        println!("{}", phrase.bright_green().bold().blink());
+    } else {
+        // Generate random hex stream
+        let hex_stream: String = (0..rng.gen_range(30..100))
+            .map(|_| format!("{:02X}", rng.gen_range(0..256)))
+            .collect::<Vec<String>>()
+            .join(" ");
+        println!("{}", hex_stream.green().dimmed());
+    }
+}
+
+fn generate_matrix_hash(rng: &mut ThreadRng, length: usize) -> String {
+    let chars = "0123456789ABCDEF";
+    (0..length)
+        .map(|_| chars.chars().nth(rng.gen_range(0..chars.len())).unwrap())
+        .collect()
+}
+
+fn generate_matrix_bar(progress: u32, width: usize) -> String {
+    let filled = (progress as usize * width) / 100;
+    let mut bar = String::new();
+    
+    for i in 0..width {
+        if i < filled {
+            bar.push('█');
+        } else {
+            bar.push('░');
+        }
+    }
+    
+    bar.green().to_string()
 }
