@@ -5,6 +5,7 @@ A Rust application that generates convincing fake console logs to make your comp
 ## Features
 
 ### Normal Mode (Default)
+
 - **Colorful Console Output**: Beautiful colored logs that look professional
 - **Multiple Log Types**:
   - System operations (memory, CPU, threading)
@@ -18,6 +19,7 @@ A Rust application that generates convincing fake console logs to make your comp
 - **Progress Bars**: Occasional progress indicators for long operations
 
 ### Matrix Mode
+
 - **Scrolling Green Text**: Classic Matrix-style display with Japanese characters
 - **Neural Network Interface**: Simulated brain-computer interface
 - **System Breach Alerts**: Matrix-themed security warnings
@@ -27,24 +29,34 @@ A Rust application that generates convincing fake console logs to make your comp
 ## Usage
 
 ### Normal Mode
+
 ```bash
 cargo run
 ```
 
 Or use the convenient run scripts:
+
 - Windows: `run.bat`
 - Linux/macOS: `./run.sh`
 
 ### Matrix Mode
+
 ```bash
 cargo run -- --matrix
 ```
 
-Or use the Matrix-specific scripts:
+Or use the run scripts with the matrix flag:
+
+- Windows: `run.bat --matrix`
+- Linux/macOS: `./run.sh --matrix`
+
+Or use the dedicated Matrix scripts:
+
 - Windows: `matrix.bat`
 - Linux/macOS: `./matrix.sh`
 
 ### Command Line Options
+
 ```bash
 cargo run -- --help
 ```
@@ -52,6 +64,7 @@ cargo run -- --help
 ## Installation
 
 ### Prerequisites
+
 First, install Rust from [rustup.rs](https://rustup.rs/):
 
 1. Open PowerShell as Administrator
@@ -60,6 +73,7 @@ First, install Rust from [rustup.rs](https://rustup.rs/):
 4. Restart your terminal after installation
 
 ### Building and Running
+
 ```powershell
 # Navigate to the project directory
 cd "c:\Users\brand\PROJECTS\AlienFacepalm\Mock_Productive\fake-productivity"
@@ -74,6 +88,7 @@ cargo run -- --matrix
 ## Sample Output
 
 ### Normal Mode
+
 ```
 🚀 Fake Productivity System v2.1.3 - Starting...
 ============================================
@@ -89,6 +104,7 @@ cargo run -- --matrix
 ```
 
 ### Matrix Mode
+
 ```
 THE MATRIX - NEURAL INTERFACE ACTIVE
 ======================================
