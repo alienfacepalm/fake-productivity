@@ -26,6 +26,80 @@ A Rust application that generates convincing fake console logs to make your comp
 - **Encrypted Data Streams**: Hexadecimal data flows
 - **Classic Matrix Quotes**: "Wake up, Neo..." and other iconic phrases
 
+## Requirements
+
+### Unicode/Japanese Character Support
+
+This application uses Japanese characters (Hiragana, Katakana, Kanji) and Unicode symbols for authentic display. For the best experience:
+
+#### Terminal Setup
+- **Modern Terminal**: Use Alacritty, Kitty, iTerm2, Windows Terminal, or GNOME Terminal
+- **UTF-8 Encoding**: Ensure your terminal is set to UTF-8 encoding
+- **Environment**: Set `LANG=en_US.UTF-8` (or your locale with UTF-8)
+
+#### Font Requirements
+Install a font that supports CJK (Chinese, Japanese, Korean) characters:
+
+**Recommended Fonts:**
+- **Noto Sans CJK** / **Noto Sans JP** - Google's comprehensive CJK font
+- **Source Han Sans** / **Source Code Pro** - Adobe's CJK font family
+- **Fira Code** (with CJK fallback) - Popular programming font
+- **JetBrains Mono** (with CJK fallback) - JetBrains' monospace font
+- **Cascadia Code PL** - Microsoft's terminal font with good Unicode support
+
+#### Installation Examples
+
+**Ubuntu/Debian:**
+```bash
+# Install CJK fonts
+sudo apt update
+sudo apt install fonts-noto-cjk fonts-noto-color-emoji fonts-liberation
+
+# Set UTF-8 locale (if not already set)
+sudo locale-gen en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# Add to your shell profile for persistence
+echo 'export LANG=en_US.UTF-8' >> ~/.bashrc
+echo 'export LC_ALL=en_US.UTF-8' >> ~/.bashrc
+source ~/.bashrc
+```
+
+**Arch Linux:**
+```bash
+sudo pacman -S noto-fonts-cjk noto-fonts-emoji
+```
+
+**macOS:**
+```bash
+brew install --cask font-noto-sans-cjk-jp
+```
+
+**Windows PowerShell:**
+```powershell
+# Using Chocolatey (recommended)
+choco install noto-fonts-cjk
+refreshenv
+
+# Or using Scoop
+scoop bucket add nerd-fonts
+scoop install Cascadia-Code
+refreshenv
+
+# Or download manually from Google Fonts
+# https://fonts.google.com/noto/specimen/Noto+Sans+JP
+```
+
+**Windows Terminal Setup:**
+1. Open Windows Terminal settings (Ctrl+,)
+2. Go to Defaults > Appearance > Font face
+3. Select "Cascadia Code PL" or installed Noto font
+4. Save settings
+
+#### Testing Your Setup
+The application will display a character test on startup. If you see garbled characters or boxes (□), your font doesn't support Japanese characters.
+
 ## Usage
 
 ### Normal Mode
