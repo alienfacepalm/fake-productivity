@@ -1,9 +1,18 @@
 use std::thread;
 use std::time::Duration;
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::io::{self, Write};
 use rand::prelude::*;
 use colored::*;
 use chrono::prelude::*;
 use clap::Parser;
+use crossterm::{
+    event::{self, Event, KeyCode, KeyModifiers, KeyEvent},
+    execute,
+    terminal::{self, EnterAlternateScreen, LeaveAlternateScreen},
+    cursor,
+};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -21,17 +30,19 @@ struct Args {
     daemon: bool,
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
     
-    // Setup full-screen environment
-    setup_fullscreen();
+    // Setup fullscreen terminal environment
+    setup_fullscreen_terminal()?;
+    
+    // Shared state for the application
+    let should_exit = Arc::new(AtomicBool::new(false));
+    let is_fullscreen = Arc::new(AtomicBool::new(true));
     
     // Handle daemon mode
     if args.daemon {
         println!("🔧 Starting in daemon mode...");
-        // In a real implementation, you'd fork here
-        // For now, just run normally but indicate daemon mode
     }
     
     // Check for Japanese character support (unless quick mode)
@@ -39,51 +50,115 @@ fn main() {
         check_unicode_support();
     }
     
-    // Setup signal handlers for clean exit
-    setup_signal_handlers();
+    // Clone shared state for background thread
+    let should_exit_clone = Arc::clone(&should_exit);
+    let is_fullscreen_clone = Arc::clone(&is_fullscreen);
     
-    if args.matrix {
-        matrix_mode();
-    } else {
-        normal_mode(args.quick);
+    // Start background thread for generating fake productivity output
+    let matrix_mode = args.matrix;
+    let quick_mode = args.quick;
+    thread::spawn(move || {
+        if matrix_mode {
+            matrix_mode_thread(should_exit_clone);
+        } else {
+            normal_mode_thread(quick_mode, should_exit_clone);
+        }
+    });
+    
+    // Main input handling loop
+    loop {
+        if should_exit.load(Ordering::Relaxed) {
+            break;
+        }
+        
+        // Check for keyboard input (non-blocking)
+        if event::poll(Duration::from_millis(100))? {
+            if let Event::Key(KeyEvent { code, modifiers, .. }) = event::read()? {
+                match code {
+                    KeyCode::Esc => {
+                        // Close app on ESC
+                        should_exit.store(true, Ordering::Relaxed);
+                        break;
+                    }
+                    KeyCode::Char('c') | KeyCode::Char('C') if modifiers.contains(KeyModifiers::CONTROL) => {
+                        // Close app on Ctrl+C
+                        should_exit.store(true, Ordering::Relaxed);
+                        break;
+                    }
+                    KeyCode::Char('z') | KeyCode::Char('Z') if modifiers.contains(KeyModifiers::CONTROL) => {
+                        // Close app on Ctrl+Z
+                        should_exit.store(true, Ordering::Relaxed);
+                        break;
+                    }
+                    KeyCode::Char('f') | KeyCode::Char('F') if modifiers.contains(KeyModifiers::CONTROL) => {
+                        // Toggle fullscreen on Ctrl+F
+                        let current_fullscreen = is_fullscreen_clone.load(Ordering::Relaxed);
+                        if current_fullscreen {
+                            exit_fullscreen()?;
+                            is_fullscreen_clone.store(false, Ordering::Relaxed);
+                        } else {
+                            enter_fullscreen()?;
+                            is_fullscreen_clone.store(true, Ordering::Relaxed);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+        }
     }
+    
+    cleanup_and_exit();
+    Ok(())
 }
 
-fn setup_fullscreen() {
+fn setup_fullscreen_terminal() -> Result<(), Box<dyn std::error::Error>> {
+    // Enable raw mode for input handling
+    terminal::enable_raw_mode()?;
+    
+    // Enter alternate screen and hide cursor
+    execute!(
+        io::stdout(),
+        EnterAlternateScreen,
+        cursor::Hide
+    )?;
+    
     // Clear screen and position cursor at top
     print!("\x1B[2J\x1B[H");
-    
-    // Hide cursor for cleaner look
-    print!("\x1B[?25l");
-    
-    // Enable alternate screen buffer (like vim/less)
-    print!("\x1B[?1049h");
     
     // Set terminal title
     print!("\x1B]0;Fake Productivity System - Neural Interface\x07");
     
-    std::io::Write::flush(&mut std::io::stdout()).unwrap();
+    io::stdout().flush()?;
+    Ok(())
 }
 
-fn setup_signal_handlers() {
-    // Register cleanup on Ctrl+C
-    ctrlc::set_handler(move || {
-        cleanup_and_exit();
-    }).expect("Error setting Ctrl-C handler");
+fn enter_fullscreen() -> Result<(), Box<dyn std::error::Error>> {
+    // Re-enter alternate screen
+    execute!(io::stdout(), EnterAlternateScreen, cursor::Hide)?;
+    print!("\x1B[2J\x1B[H");
+    io::stdout().flush()?;
+    Ok(())
+}
+
+fn exit_fullscreen() -> Result<(), Box<dyn std::error::Error>> {
+    // Leave alternate screen and show cursor
+    execute!(io::stdout(), LeaveAlternateScreen, cursor::Show)?;
+    print!("\x1B[2J\x1B[H");
+    println!("📱 Windowed mode - Press Ctrl+F to return to fullscreen, ESC/Ctrl+C/Ctrl+Z to exit");
+    io::stdout().flush()?;
+    Ok(())
 }
 
 fn cleanup_and_exit() {
-    // Restore cursor
-    print!("\x1B[?25h");
-    
-    // Restore normal screen buffer
-    print!("\x1B[?1049l");
+    // Restore terminal
+    let _ = terminal::disable_raw_mode();
+    let _ = execute!(io::stdout(), LeaveAlternateScreen, cursor::Show);
     
     // Clear screen
     print!("\x1B[2J\x1B[H");
     
     println!("🔌 Fake Productivity System disconnected. Reality restored.");
-    std::io::Write::flush(&mut std::io::stdout()).unwrap();
+    let _ = io::stdout().flush();
     std::process::exit(0);
 }
 
@@ -131,13 +206,13 @@ fn check_unicode_support() {
     println!("{}", "============================================".cyan());
 }
 
-fn normal_mode(quick: bool) {
+fn normal_mode_thread(quick: bool, should_exit: Arc<AtomicBool>) {
     // Clear screen and show header
     print!("\x1B[2J\x1B[H");
     
     println!("{}", "🚀 FAKE PRODUCTIVITY SYSTEM v2.0".bright_cyan().bold());
     println!("{}", "================================".cyan());
-    println!("{}", "Press Ctrl+C to exit gracefully".dimmed());
+    println!("{}", "Press Ctrl+F to toggle fullscreen, ESC/Ctrl+C/Ctrl+Z to exit".dimmed());
     println!();
     
     let delay = if quick { 
@@ -150,7 +225,7 @@ fn normal_mode(quick: bool) {
     
     let mut rng = thread_rng();
     
-    loop {
+    while !should_exit.load(Ordering::Relaxed) {
         thread::sleep(Duration::from_millis(delay));
         
         match rng.gen_range(0..10) {
@@ -164,18 +239,18 @@ fn normal_mode(quick: bool) {
     }
 }
 
-fn matrix_mode() {
+fn matrix_mode_thread(should_exit: Arc<AtomicBool>) {
     // Clear screen and position cursor
     print!("\x1B[2J\x1B[H");
     
     println!("{}", "THE MATRIX - NEURAL INTERFACE ACTIVE".bright_green().bold());
     println!("{}", "======================================".green());
-    println!("{}", "Press Ctrl+C to disconnect from the Matrix".dimmed());
+    println!("{}", "Press Ctrl+F to toggle fullscreen, ESC/Ctrl+C/Ctrl+Z to exit".dimmed());
     println!();
     
     let mut rng = thread_rng();
     
-    loop {
+    while !should_exit.load(Ordering::Relaxed) {
         let delay = rng.gen_range(50..300); // Faster updates for Matrix effect
         thread::sleep(Duration::from_millis(delay));
         
