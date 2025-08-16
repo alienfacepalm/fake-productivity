@@ -210,7 +210,7 @@ fn normal_mode_thread(quick: bool, should_exit: Arc<AtomicBool>) {
     // Clear screen and show header
     print!("\x1B[2J\x1B[H");
     
-    println!("{}", "🚀 FAKE PRODUCTIVITY SYSTEM v2.0".bright_cyan().bold());
+    println!("{}", "🚀 FAKE PRODUCTIVITY SYSTEM v2.1".bright_cyan().bold());
     println!("{}", "================================".cyan());
     println!("{}", "Press Ctrl+F to toggle fullscreen, ESC/Ctrl+C/Ctrl+Z to exit".dimmed());
     println!();
