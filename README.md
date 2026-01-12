@@ -138,4 +138,9 @@ Works on Windows, macOS, and Linux. Both `.bat` and `.sh` run scripts are provid
 
 ## Disclaimer
 
-This is purely for entertainment purposes. Use responsibly and don't actually try to fool anyone into thinking you're saving the world with your computer! 😄
+
+## Documentation
+
+- [Analysis Report](docs/analysis_report.md)
+- [Refactoring Plan](docs/refactoring_plan.md)
+- [Refactoring Walkthrough](docs/walkthrough.md)
