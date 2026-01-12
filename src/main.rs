@@ -35,7 +35,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Shared state for the application
     let should_exit = Arc::new(AtomicBool::new(false));
     let is_fullscreen = Arc::new(AtomicBool::new(true));
-    let matrix_mode = Arc::new(AtomicBool::new(false));
+    let matrix_mode = Arc::new(AtomicBool::new(args.matrix));
     
     // Handle daemon mode
     if args.daemon {
@@ -140,19 +140,20 @@ fn normal_mode_thread(quick: bool, should_exit: Arc<AtomicBool>, matrix_mode: Ar
     while !should_exit.load(Ordering::Relaxed) {
         thread::sleep(Duration::from_millis(delay));
         
-        match rng.gen_range(0..10) {
-            0..=2 => generate_system_log(&mut rng),
-            3..=4 => generate_database_log(&mut rng),
-            5..=6 => generate_network_log(&mut rng),
-            7 => generate_ai_log(&mut rng),
-            8 => generate_security_log(&mut rng),
-            _ => generate_processing_log(&mut rng),
-        }
-        
         if matrix_mode.load(Ordering::Relaxed) {
-            // Additional matrix-like output in the background
-            if rng.gen_bool(0.1) {
-                generate_matrix_code(&mut rng);
+            // Matrix mode: Only matrix characters
+            generate_matrix_code(&mut rng);
+            // Speed up slightly for the rain effect
+            thread::sleep(Duration::from_millis(delay / 2));
+        } else {
+            // Normal mode
+            match rng.gen_range(0..10) {
+                0..=2 => generate_system_log(&mut rng),
+                3..=4 => generate_database_log(&mut rng),
+                5..=6 => generate_network_log(&mut rng),
+                7 => generate_ai_log(&mut rng),
+                8 => generate_security_log(&mut rng),
+                _ => generate_processing_log(&mut rng),
             }
         }
     }
